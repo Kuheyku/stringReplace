@@ -70,6 +70,19 @@ def setup():
 def run():
 
 def main():
+    choice = 0
+    while choice = 0:
+        # Ask user for their intention
+        userInput=input("String Replacer\nPlease pick a function\n(1) Add new instance\n(2) Run stored instance\nChoice: ")
+        if userInput == "1":
+            setup(True)
+            break
+        elif userInput == "2":
+            print("Run Password Changer")
+            run()
+            break
+        else:
+            print("Invalid Input!")
 
 main()
 
