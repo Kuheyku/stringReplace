@@ -21,14 +21,18 @@ def openConfig():
     return data
 
 def fileReplace(currentString, stringChange, filename):
-    # Read in the file
-    with open(filename, 'r', encoding='utf-8') as file :
-        filedata = file.read()
-    # Replace the target string with the new string
-    filedata = filedata.replace(currentString, stringChange)
-    # Write the file out again
-    with open(filename, 'w', encoding='utf-8') as file:
-        file.write(filedata)
+    try:
+        # Read in the file
+        with open(filename, 'r', encoding='utf-8') as file :
+            filedata = file.read()
+        # Replace the target string with the new string
+        filedata = filedata.replace(currentString, stringChange)
+        # Write the file out again
+        with open(filename, 'w', encoding='utf-8') as file:
+            file.write(filedata)
+        print("[SUCCESS] Changes for "+filename + " made successfully")
+    except:
+        print("[ERROR]" +filename + " not found")
 
 # This function will append dictionary key:value into the router list
 def appendList(instanceName, currentStringList, changeStringList, pathLocationList, data):
@@ -44,11 +48,9 @@ def setup():
     # 1. Check whether a config file is present if not intialize variables accordingly
     try:
         data = openConfig()
-        instance = len(data["instance"])
     except:
         data = {}
         data["instance"] = []
-        instance = 0
     currentStringList = []
     changeStringList = []
     pathLocationList = []
@@ -74,30 +76,47 @@ def setup():
 
     writeToConfig(appendList(instanceName, currentStringList, changeStringList, pathLocationList, data))
 
-def run():
+def runMenu():
+    choice = 0
+    while choice == 0:
+        # Ask user for their intention
+        userInput=input("\nPlease pick a function\n(1) run string replace instance\n(2) Run all string replace instance\nChoice: ")
+        if userInput == "1":
+            main()
+            break
+        elif userInput == "2":
+            runAll()
+            break
+        else:
+            print("Invalid Input!")
+
+def runAll():
     try:
         data = openConfig()
-        instanceAmt = len(data["instance"])
         currentInstance = 0
         for x in data["instance"]:
             try:
                 # First it initializes all the variables
-                instanceName = data["instance"][currentInstance][currentInstance]
-                currentStringList = data["instance"][currentInstance][currentStringList]
-                changeStringList = data["instance"][currentInstance][changeStringList]
-                pathLocationList = data["instance"][currentInstance][pathLocationList]
+                instanceName = data["instance"][currentInstance]["instanceName"]
+                currentStringList = data["instance"][currentInstance]["currentStringList"]
+                changeStringList = data["instance"][currentInstance]["changeStringList"]
+                pathLocationList = data["instance"][currentInstance]["pathLocationList"]
                 print("Running string replace for instance:" + instanceName)
                 pointer = len(currentStringList) - 1
                 pointerPath = len(pathLocationList) - 1
+                print(currentStringList[pointer]["string"])
                 while pointer >= 0:
-                    def fileReplace(currentStringList["string"][pointer]
+                    while pointerPath >= 0:
+                        fileReplace(currentStringList[pointer]["string"], changeStringList[pointer]["string"], pathLocationList[pointerPath]["path"])
+                        pointerPath = pointerPath - 1
+                    pointerPath = len(pathLocationList) - 1
                     pointer = pointer - 1
                 currentInstance = currentInstance + 1
-
-                
-            except:
+            except Exception as e:
+                print(e)
                 print("[ERROR] Config file is corrupted. Please ensure all variables are correct in the file named \'config.json\' present in the same directory.\nIf error persists please delete \'config.json\' and set up all string replace instances.")
-    except:
+    except Exception as e:
+        print(e)
         print("[ERROR] Config file not found. Ensure a file named \'config.json\' is present in the same directory.")
 
 def main():
@@ -111,7 +130,7 @@ def main():
             setup()
             break
         elif userInput == "2":
-            run()
+            runMenu()
             break
         else:
             print("Invalid Input!")

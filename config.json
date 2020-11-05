@@ -1,23 +1,18 @@
 {
   "instance": [
     {
+      "instanceName": "Test",
       "currentStringList": [
         {
-          "string": "s"
+          "string": "a"
         },
         {
-          "string": "s"
-        },
-        {
-          "string": "d"
+          "string": "b"
         }
       ],
       "changeStringList": [
         {
-          "string": "s"
-        },
-        {
-          "string": "s"
+          "string": "c"
         },
         {
           "string": "d"
@@ -25,39 +20,10 @@
       ],
       "pathLocationList": [
         {
-          "path": "4"
+          "path": "C:/Internship/Test environment for script/D Drive/fish.config"
         },
         {
-          "path": "4"
-        }
-      ]
-    },
-    {
-      "currentStringList": [
-        {
-          "string": "new1"
-        },
-        {
-          "string": "new"
-        }
-      ],
-      "changeStringList": [
-        {
-          "string": "new1re"
-        },
-        {
-          "string": "new"
-        }
-      ],
-      "pathLocationList": [
-        {
-          "path": "bok"
-        },
-        {
-          "path": "tok"
-        },
-        {
-          "path": "lok"
+          "path": "C:/Internship/Test environment for script/D Drive/wok.ini"
         }
       ]
     }
