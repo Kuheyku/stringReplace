@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 #Author: Aaron Lee
-#Title: stringReplacer
-#Purpose: To Replace Strings in multiple Files
+#Title: Search and Replace program
+#Purpose: To search and replace replace strings in multiple files
 #Python version: 3.8.6 64-bit
-#Program version: 1.0
+#Program version: 1.1
 #FOR TESTING PURPOSES
 #LAPTOP-B1P29PK\SQLEXPRESS2016
 #Janmo_POS_db
-import json
+import json, os, time
 
 def writeToConfig(dataAdd):
     with open("config.json", "w") as outfile:
@@ -30,9 +30,8 @@ def fileReplace(currentString, stringChange, filename):
         # Write the file out again
         with open(filename, 'w', encoding='utf-8') as file:
             file.write(filedata)
-        print("[SUCCESS] Changes for "+filename + " made successfully")
-    except:
-        print("[ERROR]" +filename + " not found")
+    except Exception as e:
+        print("[ERROR] fileReplace function: " + e)
 
 # This function will append dictionary key:value into the router list
 def appendList(instanceName, currentStringList, changeStringList, pathLocationList, data):
@@ -77,55 +76,108 @@ def setup():
     writeToConfig(appendList(instanceName, currentStringList, changeStringList, pathLocationList, data))
 
 def runMenu():
-    choice = 0
-    while choice == 0:
-        # Ask user for their intention
-        userInput=input("\nPlease pick a function\n(1) run string replace instance\n(2) Run all string replace instance\nChoice: ")
-        if userInput == "1":
-            main()
-            break
-        elif userInput == "2":
-            runAll()
-            break
-        else:
-            print("Invalid Input!")
-
-def runAll():
+    os.system('cls')
     try:
         data = openConfig()
         currentInstance = 0
+        choice = 0
+        instanceAmt = len(data["instance"])
+        print("Total of ("+str(instanceAmt)+") search and replace instance(s) found!\nInstance names:")
         for x in data["instance"]:
+            instanceName = data["instance"][currentInstance]["instanceName"]
+            print("("+str(currentInstance+1)+") "+instanceName)
+            currentInstance = currentInstance + 1
+        # Ask user for their intention
+        userInput=int(input("\nPlease input the number next to the instance you wish to run.\nInput ("+str(instanceAmt+1)+") to run all instances.\nChoice: "))
+    except Exception as e:
+        print(e)
+        print("[ERROR] Config file not found. Ensure a file named \'config.json\' is present in the same directory.")
+        time.sleep(1)
+        main()
+        
+    while choice == 0:
+        if userInput >= 1 and userInput <= instanceAmt:
+            run(userInput-1)
+            break
+        elif userInput == (instanceAmt+1):
+            #Runs all
+            run(userInput)
+            break
+        else:
+            runMenu()
+            break
+
+def run(inputInstance):
+    os.system('cls')
+    currentInstance = inputInstance
+    try:
+        data = openConfig()
+        instanceAmt = len(data["instance"])
+        # Runs all instances
+        if currentInstance > instanceAmt:
+            currentInstance = 0
+            print("Running string search & replace for all (" +str(instanceAmt)+ ") instances.")
+            for x in data["instance"]:
+                try:
+                    # First it initializes all the variables
+                    instanceName = data["instance"][currentInstance]["instanceName"]
+                    currentStringList = data["instance"][currentInstance]["currentStringList"]
+                    changeStringList = data["instance"][currentInstance]["changeStringList"]
+                    pathLocationList = data["instance"][currentInstance]["pathLocationList"]
+                    print("\nRunning string search & replace for instance: " + instanceName)
+                    pointer = len(currentStringList) - 1
+                    pointerPath = len(pathLocationList) - 1
+                    while pointerPath >= 0:
+                        try:
+                            while pointer >= 0:
+                                fileReplace(currentStringList[pointer]["string"], changeStringList[pointer]["string"], pathLocationList[pointerPath]["path"])
+                                pointer = pointer - 1
+                            print("[SUCCESS] Changes for " + pathLocationList[pointerPath]["path"] + " made successfully")
+                        except:
+                            print("[ERROR]" + pathLocationList[pointerPath]["path"] + " not found")
+                        pointer = len(currentStringList) - 1
+                        pointerPath = pointerPath - 1
+                    currentInstance = currentInstance + 1    
+                except Exception as e:
+                    print(e)
+                    print("[ERROR] Config file is corrupted. Please ensure all variables are correct in the file named \'config.json\' present in the same directory.\nIf error persists please delete \'config.json\' and re-setup.")
+        else:
             try:
                 # First it initializes all the variables
                 instanceName = data["instance"][currentInstance]["instanceName"]
                 currentStringList = data["instance"][currentInstance]["currentStringList"]
                 changeStringList = data["instance"][currentInstance]["changeStringList"]
                 pathLocationList = data["instance"][currentInstance]["pathLocationList"]
-                print("Running string replace for instance:" + instanceName)
+                print("Running string search & replace for instance: " + instanceName)
                 pointer = len(currentStringList) - 1
                 pointerPath = len(pathLocationList) - 1
-                print(currentStringList[pointer]["string"])
-                while pointer >= 0:
-                    while pointerPath >= 0:
-                        fileReplace(currentStringList[pointer]["string"], changeStringList[pointer]["string"], pathLocationList[pointerPath]["path"])
-                        pointerPath = pointerPath - 1
-                    pointerPath = len(pathLocationList) - 1
-                    pointer = pointer - 1
-                currentInstance = currentInstance + 1
+                while pointerPath >= 0:
+                    try:
+                        while pointer >= 0:
+                            fileReplace(currentStringList[pointer]["string"], changeStringList[pointer]["string"], pathLocationList[pointerPath]["path"])
+                            pointer = pointer - 1
+                        print("[SUCCESS] Changes for " + pathLocationList[pointerPath]["path"] + " made successfully")
+                    except:
+                        print("[ERROR]" + pathLocationList[pointerPath]["path"] + " not found")
+                    pointer = len(currentStringList) - 1
+                    pointerPath = pointerPath - 1
             except Exception as e:
                 print(e)
-                print("[ERROR] Config file is corrupted. Please ensure all variables are correct in the file named \'config.json\' present in the same directory.\nIf error persists please delete \'config.json\' and set up all string replace instances.")
+                print("[ERROR] Instance values in the Config file is corrupted. Please ensure all variables are correct in the file named \'config.json\' present in the same directory.\nIf error persists please delete \'config.json\' and re-setup.")
+
     except Exception as e:
         print(e)
         print("[ERROR] Config file not found. Ensure a file named \'config.json\' is present in the same directory.")
 
 def main():
+    os.system('cls')
     choice = 0
-    print("Introduction: Light-Weight String Replacer Program by Aaron Lee!")
-    print("Program version: 1.0")
+    print("Introduction: Light-weight search and replace for multiple files Program")
+    print("Author: Aaron Lee")
+    print("Program version: 1.1")
     while choice == 0:
         # Ask user for their intention
-        userInput=input("\nPlease pick a function\n(1) Add new string replace instance\n(2) Run stored string replace instance\nChoice: ")
+        userInput=input("\nPlease pick a function\n(1) Setup\\Add new string replace instance\n(2) Run stored string replace instance\nChoice: ")
         if userInput == "1":
             setup()
             break
@@ -136,4 +188,3 @@ def main():
             print("Invalid Input!")
 
 main()
-

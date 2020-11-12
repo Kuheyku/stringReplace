@@ -4,26 +4,59 @@
       "instanceName": "Test",
       "currentStringList": [
         {
-          "string": "a"
+          "string": "u"
         },
         {
-          "string": "b"
+          "string": "l"
         }
       ],
       "changeStringList": [
         {
-          "string": "c"
+          "string": "d"
         },
         {
-          "string": "d"
+          "string": "z"
         }
       ],
       "pathLocationList": [
         {
-          "path": "C:/Internship/Test environment for script/D Drive/fish.config"
+          "path": "C:\\Internship\\Test environment for script\\D Drive\\blast.conf"
         },
         {
-          "path": "C:/Internship/Test environment for script/D Drive/wok.ini"
+          "path": "C:\\Internship\\Test environment for script\\D Drive\\fish.config"
+        },
+        {
+          "path": "C:\\Internship\\Test environment for script\\D Drive\\wash.txt"
+        },
+        {
+          "path": "C:\\Internship\\Test environment for script\\D Drive\\wok.ini"
+        }
+      ]
+    },
+    {
+      "instanceName": "TryHard Boh Hard 2",
+      "currentStringList": [
+        {
+          "string": "L"
+        },
+        {
+          "string": "B"
+        }
+      ],
+      "changeStringList": [
+        {
+          "string": "D"
+        },
+        {
+          "string": "P"
+        }
+      ],
+      "pathLocationList": [
+        {
+          "path": "C:\\Internship\\Test environment for script\\D Drive\\wok.ini"
+        },
+        {
+          "path": "C:\\Internship\\Test environment for script\\D Drive\\blast.conf"
         }
       ]
     }
